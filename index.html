@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free TikTok Downloader & Daily Horoscope</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f0f2f5; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .card { background: white; padding: 25px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { color: #1877f2; margin-bottom: 20px; }
+        h2 { color: #333; margin-top: 0; }
+        input[type="text"], select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+        button { width: 100%; padding: 12px; background-color: #1877f2; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #145dbf; }
+        #tiktokResult, #horoscopeResult { margin-top: 15px; word-break: break-all; }
+        .download-btn { display: inline-block; background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>All-in-One Free Tools</h1>
+
+    <!-- TikTok Downloader Card -->
+    <div class="card">
+        <h2>TikTok Video Downloader</h2>
+        <p>Bina Watermark TikTok Video Download Karein</p>
+        <input type="text" id="tiktokUrl" placeholder="TikTok Video Link Yahan Paste Karein...">
+        <button onclick="downloadTikTok()">Download Video</button>
+        <div id="tiktokResult"></div>
+    </div>
+
+    <!-- Daily Horoscope Card -->
+    <div class="card">
+        <h2>Daily Horoscope (Aaj Ka Rashifal)</h2>
+        <p>Apna Zodiac Sign Select Karein</p>
+        <select id="zodiacSign">
+            <option value="aries">Aries (Aries)</option>
+            <option value="taurus">Taurus (Taurus)</option>
+            <option value="gemini">Gemini (Gemini)</option>
+            <option value="cancer">Cancer (Cancer)</option>
+            <option value="leo">Leo (Leo)</option>
+            <option value="virgo">Virgo (Virgo)</option>
+            <option value="libra">Libra (Libra)</option>
+            <option value="scorpio">Scorpio (Scorpio)</option>
+            <option value="sagittarius">Sagittarius (Sagittarius)</option>
+            <option value="capricorn">Capricorn (Capricorn)</option>
+            <option value="aquarius">Aquarius (Aquarius)</option>
+            <option value="pisces">Pisces (Pisces)</option>
+        </select>
+        <button onclick="getHoroscope()">Get Daily Horoscope</button>
+        <div id="horoscopeResult"></div>
+    </div>
+</div>
+
+<script>
+    // 1. TikTok Downloader Function
+    async function downloadTikTok() {
+        const inputUrl = document.getElementById('tiktokUrl').value;
+        const resultDiv = document.getElementById('tiktokResult');
+
+        if (!inputUrl) {
+            resultDiv.innerHTML = "<p style='color:red;'>Meherbani karke TikTok URL paste karein!</p>";
+            return;
+        }
+
+        resultDiv.innerHTML = "<p style='color:blue;'>Video process ho rahi hai, thoda intizar karein...</p>";
+
+        // RapidAPI Keys (Aapki image se extract ki gayi hain)
+        const apiKey = "8cd33e601bmsh6a508104288ed07p1923cdjsn57c0aa79a3b7"; 
+        const apiHost = "tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com";
+
+        const apiUrl = `https://${apiHost}/rich_response/index?url=${encodeURIComponent(inputUrl)}`;
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': apiKey,
+                    'x-rapidapi-host': apiHost
+                }
+            });
+            const data = await response.json();
+
+            if (data && data.video && data.video[0]) {
+                const videoUrl = data.video[0];
+                resultDiv.innerHTML = `
+                    <p style='color:green; font-weight:bold;'>Video Downloader Ready!</p>
+                    <a href="${videoUrl}" target="_blank" class="download-btn">Click Here to Download Video</a>
+                `;
+            } else {
+                resultDiv.innerHTML = "<p style='color:red;'>Video download link nahi mil saka. URL sahi check karein.</p>";
+            }
+        } catch (error) {
+            resultDiv.innerHTML = "<p style='color:red;'>Error aa gaya hai. Dubara try karein.</p>";
+        }
+    }
+
+    // 2. Horoscope Placeholder Function
+    function getHoroscope() {
+        const sign = document.getElementById('zodiacSign').value;
+        const resultDiv = document.getElementById('horoscopeResult');
+        resultDiv.innerHTML = `<p style='color:green;'>Aaj ${sign.toUpperCase()} ke liye din achha rahega! (Horoscope API integrate ho sakti hai)</p>`;
+    }
+</script>
+
+</body>
+</html>
